@@ -7,3 +7,13 @@ module.exports.addSignature = function (newFirst, newLast, newSignature) {
     let params = [newFirst, newLast, newSignature];
     return db.query(q, params);
 };
+
+module.exports.getSigners = function () {
+    let q = "SELECT COUNT(*) FROM signatures";
+    return db.query(q);
+};
+
+module.exports.getNames = function () {
+    let q = "SELECT first, last FROM signatures";
+    return db.query(q);
+};

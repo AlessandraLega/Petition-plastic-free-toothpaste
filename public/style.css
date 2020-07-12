@@ -11,3 +11,7 @@ canvas {
     background-color: white;
     border: 2px black solid;
 }
+
+#error {
+    color: red;
+}
