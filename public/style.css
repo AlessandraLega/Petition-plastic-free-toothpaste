@@ -1,0 +1,13 @@
+body {
+    background-color: aquamarine;
+    margin: 0;
+}
+
+form {
+    position: relative;
+}
+
+canvas {
+    background-color: white;
+    border: 2px black solid;
+}
