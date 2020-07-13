@@ -8,7 +8,7 @@
     canvas.on("mousedown", function (event) {
         var startLeft = event.clientX - canvas.offset().left;
         var startTop = event.clientY - canvas.offset().top;
-        ctx.strokeStyle = "black";
+        ctx.strokeStyle = "red";
         ctx.lineWidth = 3;
         ctx.beginPath();
         ctx.moveTo(startLeft, startTop);
@@ -30,7 +30,7 @@
     }
 
     button.on("click", function () {
-        var dataUrl = canvas[0].toDataURL("image/jpeg", 0.5);
+        var dataUrl = canvas[0].toDataURL("image/png", 0.5);
         inputSig.val(dataUrl);
     });
 })();

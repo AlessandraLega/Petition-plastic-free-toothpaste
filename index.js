@@ -4,16 +4,23 @@ const hb = require("express-handlebars");
 app.engine("handlebars", hb());
 app.set("view engine", "handlebars");
 const db = require("./db.js");
-const cookieParser = require("cookie-parser");
+//const cookieParser = require("cookie-parser");
+const cookieSession = require("cookie-session");
 
 app.use(express.static("public"));
 
 app.use(express.urlencoded({ extended: false }));
 
-app.use(cookieParser());
+//app.use(cookieParser());
+app.use(
+    cookieSession({
+        secret: "I am always happy",
+        maxAge: 1000 * 60 * 60 * 24 * 14,
+    })
+);
 
 app.get("/petition", (req, res) => {
-    if (req.cookies.signed) {
+    if (req.session.signed) {
         res.redirect("petition/signers");
     } else {
         res.render("home", {
@@ -25,10 +32,13 @@ app.get("/petition", (req, res) => {
 app.post("/petition", (req, res) => {
     // console.log(req.body);
     db.addSignature(req.body.first, req.body.last, req.body.signature)
-        .then(() => {
+        .then((id) => {
+            // console.log("id: ", id.rows[0].id);
             console.log("new sign added");
-            res.cookie("signed", true);
-            res.redirect("petition/signed");
+            //res.cookie("signed", true);
+            req.session.signed = true;
+            req.session.id = id.rows[0].id;
+            res.redirect("/petition/signed");
         })
         .catch((err) => {
             console.log("error in addSignature: ", err);
@@ -44,10 +54,16 @@ app.get("/petition/signed", (req, res) => {
     db.getSigners()
         .then((result) => {
             numSigners = result.rows[0].count;
-            console.log(numSigners);
-            res.render("thanks", {
-                layout: "main",
-                numSigners,
+            // console.log("sign count: ", numSigners);
+            // console.log("req.session.id: ", req.session.id);
+            db.getSignature(req.session.id).then((signature) => {
+                // console.log("signature: ", signature);
+                signature = signature.rows[0].signature;
+                res.render("thanks", {
+                    layout: "main",
+                    numSigners,
+                    signature,
+                });
             });
         })
         .catch((err) => {
