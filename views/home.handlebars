@@ -1,11 +1,10 @@
 <h1 id="title">Petition</h1>
-        <p>sign the petition</p>
-
+        <p>Hey {{name}} sign the petition</p>
         {{#if error}}
-        <p id="error">something went wrong! Please fill out all three fields!</p>
+        <p class="error">something went wrong! Please fill out all three fields!</p>
         {{/if}}
         <form method="POST">
-            <label for="first"><p>First name:</p></label>
+            {{!-- <label for="first"><p>First name:</p></label>
             <input
                 type="text"
                 name="first"
@@ -13,7 +12,8 @@
                 placeholder="first name" autocomplete="off"
             />
             <label for="last"><p>Last name:</p></label>
-            <input type="text" name="last" id="last" placeholder="last name" autocomplete="off" />
+            <input type="text" name="last" id="last" placeholder="last name" autocomplete="off" /> --}}
+
             <label for="signature"><p>Your signature:</p></label>
             <input type="hidden" id="signature" name="signature" value="" />
             <canvas id="canvas" width="600" height="100"></canvas>

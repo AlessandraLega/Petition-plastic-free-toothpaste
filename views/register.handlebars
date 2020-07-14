@@ -1,0 +1,16 @@
+<h1>Join our petition</h1>
+{{#if error}}
+    <p class="error">Something went wrong, please try again!</p>
+{{/if}}
+<form method="POST">
+    <label for="first"><p>First name:</p></label>
+    <input type="text" name="first" id="first" placeholder="first name" autocomplete="off"/>
+    <label for="last"><p>Last name:</p></label>
+    <input type="text" name="last" id="last" placeholder="last name" autocomplete="off" />
+    <label for="e-mail"><p>e-mail:</p></label>
+    <input type="text" name="eMail" id="eMail" placeholder="e-mail" autocomplete="off" />
+    <label for="password"><p>password:</p></label>
+    <input type="password" name="password" id="password" placeholder="password" autocomplete="off" />
+    <button id="submit">Sign up!</button>
+</form>
+<p>are you already a member? please <a href="/login">log in</a>.</p>

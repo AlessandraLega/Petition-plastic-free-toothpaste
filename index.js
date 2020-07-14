@@ -6,6 +6,7 @@ app.set("view engine", "handlebars");
 const db = require("./db.js");
 //const cookieParser = require("cookie-parser");
 const cookieSession = require("cookie-session");
+const bc = require("./bc.js");
 
 app.use(express.static("public"));
 
@@ -19,6 +20,78 @@ app.use(
     })
 );
 
+app.get("/register", (req, res) => {
+    res.render("register", {
+        layout: "main",
+    });
+});
+
+app.post("/register", (req, res) => {
+    bc.hash(req.body.password)
+        .then((hashedPw) => {
+            db.addUser(req.body.first, req.body.last, req.body.eMail, hashedPw)
+                .then((id) => {
+                    req.session.userId = id.rows[0].id;
+                    res.redirect("/petition");
+                })
+                .catch((err) => {
+                    console.log("error in addUser: ", err);
+                    res.render("/register", {
+                        layout: "main",
+                        error: true,
+                    });
+                });
+        })
+        .catch((err) => {
+            console.log("error in hash: ", err);
+            res.render("/register", {
+                layout: "main",
+                error: true,
+            });
+        });
+});
+
+app.get("/login", (req, res) => {
+    res.render("login", {
+        layout: "main",
+    });
+});
+
+app.post("/login", (req, res) => {
+    // console.log(req.body);
+    db.getPw(req.body.eMail)
+        .then((pw) => {
+            pw = pw.rows[0].password;
+            // console.log(pw);
+            if (!pw) {
+                res.render("login", {
+                    layout: "main",
+                    error: true,
+                });
+            } else {
+                bc.compare(req.body.password, pw)
+                    .then((matchingValue) => {
+                        if (matchingValue) {
+                            res.redirect("/petition");
+                        } else {
+                            res.render("login", {
+                                layout: "main",
+                                error: true,
+                            });
+                        }
+                    })
+                    .catch((err) => console.log("error in compare: ", err));
+            }
+        })
+        .catch((err) => console.log("error in getPw: ", err));
+});
+
+app.use(function redirect(req, res, next) {
+    if (!req.session.userId) {
+        res.redirect("/register");
+    }
+});
+
 app.get("/petition", (req, res) => {
     if (req.session.signed) {
         res.redirect("petition/signers");
@@ -31,7 +104,8 @@ app.get("/petition", (req, res) => {
 
 app.post("/petition", (req, res) => {
     // console.log(req.body);
-    db.addSignature(req.body.first, req.body.last, req.body.signature)
+    let userId = req.session.userId;
+    db.addSignature(req.body.signature, userId)
         .then((id) => {
             // console.log("id: ", id.rows[0].id);
             console.log("new sign added");
@@ -54,6 +128,7 @@ app.get("/petition/signed", (req, res) => {
     db.getSigners()
         .then((result) => {
             numSigners = result.rows[0].count;
+            console.log(numSigners);
             // console.log("sign count: ", numSigners);
             // console.log("req.session.id: ", req.session.id);
             db.getSignature(req.session.id).then((signature) => {
