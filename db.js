@@ -41,7 +41,7 @@ module.exports.addUser = function (newFirst, newLast, newEMail, hashedPw) {
 
 module.exports.getPwIdSigId = function (eMail) {
     let q =
-        "SELECT users.password, users.id AS userId, signatures.id as signatureId FROM users LEFT JOIN signatures ON users.id=signatures.user_id WHERE users.e_mail = $1";
+        "SELECT users.password, users.id AS userId, signatures.id AS signatureId FROM users LEFT JOIN signatures ON users.id=signatures.user_id WHERE users.e_mail = $1";
     let params = [eMail];
     return db.query(q, params);
 };

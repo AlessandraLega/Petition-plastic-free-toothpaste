@@ -62,12 +62,12 @@ app.post("/login", (req, res) => {
     // console.log(req.body);
     db.getPwIdSigId(req.body.eMail)
         .then((result) => {
-            let userId = result.rows[0].userId;
-            let signatureId = result.rows[0].signatureId;
+            let userId = result.rows[0].userid;
+            let signatureId = result.rows[0].signatureid;
             let pw = result.rows[0].password;
-            console.log("results: ", result.rows[0]);
             req.session.userId = userId;
             req.session.signatureId = signatureId;
+            console.log("req.session: ", req.session);
             if (!pw) {
                 res.render("login", {
                     layout: "main",
@@ -101,7 +101,7 @@ app.use(function redirect(req, res, next) {
 
 app.get("/petition", (req, res) => {
     // console.log(req.session);
-    if (req.session.signed) {
+    if (req.session.signed || req.session.signatureId) {
         res.redirect("/petition/signers");
     } else {
         res.render("home", {
@@ -119,7 +119,7 @@ app.post("/petition", (req, res) => {
             console.log("new sign added");
             //res.cookie("signed", true);
             req.session.signed = true;
-            req.session.id = id.rows[0].id;
+            req.session.signatureId = id.rows[0].id;
             res.redirect("/petition/signed");
         })
         .catch((err) => {
@@ -139,7 +139,7 @@ app.get("/petition/signed", (req, res) => {
             // console.log(numSigners);
             // console.log("sign count: ", numSigners);
             // console.log("req.session.id: ", req.session.id);
-            db.getSignature(req.session.id).then((signature) => {
+            db.getSignature(req.session.signatureId).then((signature) => {
                 // console.log("signature: ", signature);
                 signature = signature.rows[0].signature;
                 res.render("thanks", {
