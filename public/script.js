@@ -26,11 +26,10 @@
         canvas.on("mouseup", function () {
             ctx.closePath();
             canvas.off("mousemove");
+            button.on("click", function () {
+                var dataUrl = canvas[0].toDataURL("image/png", 0.5);
+                inputSig.val(dataUrl);
+            });
         });
     }
-
-    button.on("click", function () {
-        var dataUrl = canvas[0].toDataURL("image/png", 0.5);
-        inputSig.val(dataUrl);
-    });
 })();

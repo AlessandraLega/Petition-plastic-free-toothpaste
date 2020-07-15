@@ -14,8 +14,16 @@ module.exports.getSigners = function () {
 };
 
 module.exports.getNames = function () {
-    let q = "SELECT first, last FROM users";
+    let q =
+        "SELECT first, last, age, city, url FROM users RIGHT JOIN signatures ON users.id=signatures.user_id LEFT JOIN user_profiles ON users.id = user_profiles.user_id";
     return db.query(q);
+};
+
+module.exports.getNamesInCity = function (city) {
+    let q =
+        "SELECT first, last, age, city, url FROM users RIGHT JOIN signatures ON users.id=signatures.user_id LEFT JOIN user_profiles ON users.id = user_profiles.user_id WHERE city = $1";
+    let params = [city];
+    return db.query(q, params);
 };
 
 module.exports.getSignature = function (id) {
@@ -31,8 +39,16 @@ module.exports.addUser = function (newFirst, newLast, newEMail, hashedPw) {
     return db.query(q, params);
 };
 
-module.exports.getPw = function (eMail) {
-    let q = "SELECT password FROM users WHERE e_mail = $1";
+module.exports.getPwIdSigId = function (eMail) {
+    let q =
+        "SELECT users.password, users.id AS userId, signatures.id as signatureId FROM users LEFT JOIN signatures ON users.id=signatures.user_id WHERE users.e_mail = $1";
     let params = [eMail];
+    return db.query(q, params);
+};
+
+module.exports.addProfile = function (newAge, newCity, newUrl, userId) {
+    let q =
+        "INSERT INTO user_profiles (age, city, url, user_id) VALUES ($1, $2, $3, $4)";
+    let params = [newAge, newCity, newUrl, userId];
     return db.query(q, params);
 };

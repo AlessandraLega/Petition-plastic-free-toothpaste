@@ -1,0 +1,24 @@
+
+{{#if duplicate}}
+<p class="error">You already gave us your infos, thank you!
+</p>
+<p>Now visit our <a href="/petition">petition</a> page!</p>
+{{else}}
+<p>If you want, tell us something about yourself!</p>
+{{#if notANum}}
+<p class="error">Your age should be a number!
+</p>
+{{else if error}}
+<p class="error">Something went wrong, please try again!
+</p>
+{{/if}}
+<form method="POST">
+    <label for="age"><p>Age</p></label>
+    <input type="text" name="age" id="age" autocomplete="off">
+    <label for="city"><p>City</p></label>
+    <input type="text" name="city" id="city" autocomplete="off">
+    <label for="url"><p>Url</p></label>
+    <input type="text" name="url" id="url" autocomplete="off">
+    <button value="submit">Continue</button>
+</form>
+{{/if}}

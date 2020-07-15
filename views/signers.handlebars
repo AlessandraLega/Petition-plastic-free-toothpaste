@@ -1,9 +1,24 @@
+
+{{#if cityView}}
+<p>These people in {{city}} support our petition!</p>
+{{else}}
 <p>Thank you for supporting our cause!</p>
 <p>Look how many people already signed our petition:</p>
+{{/if}}
 <ul>
-    {{#names}}
+    {{#results}}
     <li>
-        {{.}}
+        {{#if url}}
+        <a href={{url}}>{{first}} {{last}}</a>
+        {{else}}
+        {{first}} {{last}}
+        {{/if}}
+        {{#if age}}
+         | {{age}} 
+        {{/if}}
+        {{#if city}}
+        | <a href = "/petition/signers/{{city}}">{{city}}</a>
+        {{/if}}
     </li>
-    {{/names}}
+    {{/results}}
 </ul>
