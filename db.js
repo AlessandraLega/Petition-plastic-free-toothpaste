@@ -1,5 +1,8 @@
 var spicedPg = require("spiced-pg");
-var db = spicedPg("postgres:alessandra:postgres@localhost:5432/caper-petition");
+var db = spicedPg(
+    process.env.DATABASE_URL ||
+        "postgres:alessandra:postgres@localhost:5432/caper-petition"
+);
 
 module.exports.addSignature = function (newSignature, userId) {
     let q =
@@ -50,5 +53,16 @@ module.exports.addProfile = function (newAge, newCity, newUrl, userId) {
     let q =
         "INSERT INTO user_profiles (age, city, url, user_id) VALUES ($1, $2, $3, $4)";
     let params = [newAge, newCity, newUrl, userId];
+    return db.query(q, params);
+};
+
+module.exports.getProfile = function (userId) {
+    let q = `SELECT users.first, users.last, users.e_mail, user_profiles.age, user_profiles.city, user_profiles.url
+                FROM users
+                LEFT JOIN user_profiles
+                ON users.id = user_profiles.user_id
+                WHERE users.id = $1
+                `;
+    let params = [userId];
     return db.query(q, params);
 };

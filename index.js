@@ -23,6 +23,7 @@ app.use(
 app.get("/register", (req, res) => {
     res.render("register", {
         layout: "main",
+        unlogged: true,
     });
 });
 
@@ -55,6 +56,7 @@ app.post("/register", (req, res) => {
 app.get("/login", (req, res) => {
     res.render("login", {
         layout: "main",
+        unlogged: true,
     });
 });
 
@@ -232,6 +234,19 @@ app.post("/profile", (req, res) => {
             }
             console.log("error in addProfile: ", err);
         });
+});
+
+app.get("/edit-profile", (req, res) => {
+    db.getProfile(req.session.userId)
+        .then((results) => {
+            let profile = results.rows[0];
+            console.log("profile: ", profile);
+            res.render("editProfile", {
+                layout: "main",
+                profile,
+            });
+        })
+        .catch((err) => console.log("error in getProfile: ", err));
 });
 
 app.listen(8080, () => {
