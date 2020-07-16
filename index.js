@@ -32,8 +32,9 @@ app.post("/register", (req, res) => {
         .then((hashedPw) => {
             db.addUser(req.body.first, req.body.last, req.body.eMail, hashedPw)
                 .then((id) => {
-                    console.log("id added");
+                    console.log("id added: ", id.rows[0].id);
                     req.session.userId = id.rows[0].id;
+                    console.log(req.session);
                     res.redirect("/profile");
                 })
                 .catch((err) => {
@@ -201,12 +202,7 @@ app.get("/profile", (req, res) => {
 app.post("/profile", (req, res) => {
     if (!req.body.age && !req.body.city && !req.body.url) {
         res.redirect("/petition");
-    } /* else if (typeof +req.body.age !== "number") {
-        res.render("profile", {
-            layout: "main",
-            notANum: true,
-        });
-    } */
+    }
     if (req.body.url) {
         if (
             req.body.url.indexOf("http") !== 0 ||
@@ -247,6 +243,40 @@ app.get("/edit-profile", (req, res) => {
             });
         })
         .catch((err) => console.log("error in getProfile: ", err));
+});
+
+app.post("/edit-profile", (req, res) => {
+    if (req.body.password) {
+        bc.hash(req.body.password)
+            .then((hashPw) => {
+                db.updatePassword(req.session.userId, hashPw).then(() => {
+                    console.log(" psw updated");
+                });
+            })
+            .catch((err) => {
+                console.log("error in update password: ", err);
+            });
+    }
+    Promise.all([
+        db.upsertProfile(
+            req.session.userId,
+            req.body.age,
+            req.body.city,
+            req.body.url
+        ),
+        db.updateUser(
+            req.session.userId,
+            req.body.first,
+            req.body.last,
+            req.body.eMail
+        ),
+    ])
+        .then(() => {
+            res.redirect("/petition/signers");
+        })
+        .catch((err) => {
+            console.log("error in upsert: ", err);
+        });
 });
 
 app.listen(process.env.PORT || 8080, () => {

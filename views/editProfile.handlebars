@@ -1,17 +1,18 @@
 <p>Edit your profile</p>
 <form method="POST">
-    <label for="first">First Name</label>
+    <label for="first"><p>First Name</p></label>
     <input type="text" name="first" id="first" autocomplete="off" value={{profile.first}}>
-        <label for="last">Last Name</label>
+        <label for="last"><p>Last Name</p></label>
     <input type="text" name="last" id="last" autocomplete="off" value={{profile.last}}>
-        <label for="eMail">e-mail</label>
+        <label for="eMail"><p>e-mail</p></label>
     <input type="text" name="eMail" id="eMail" autocomplete="off" value="{{profile.e_mail}}">
-        <label for="password">Password</label>
+        <label for="password"><p>Password</p></label>
     <input type="password" name="password" id="password" autocomplete="off" value="">
-        <label for="age">Age</label>
+        <label for="age"><p>Age</p></label>
     <input type="text" name="age" id="age" autocomplete="off" value="{{profile.age}}">
-        <label for="city">City</label>
+        <label for="city"><p>City</p></label>
     <input type="text" name="city" id="city" autocomplete="off" value="{{profile.city}}">
-        <label for="url">Url</label>
+        <label for="url"><p>Url</p></label>
     <input type="text" name="url" id="url" autocomplete="off" value="{{profile.url}}">
+    <button id="submit">Update!</button>
 </form>
