@@ -7,4 +7,4 @@ CREATE TABLE users(
     e_mail VARCHAR NOT NULL UNIQUE CHECK (e_mail != ''),
     password VARCHAR NOT NULL CHECK (password != ''),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-)
+);
