@@ -249,6 +249,6 @@ app.get("/edit-profile", (req, res) => {
         .catch((err) => console.log("error in getProfile: ", err));
 });
 
-app.listen(8080, () => {
+app.listen(process.env.PORT || 8080, () => {
     console.log("express listening");
 });
