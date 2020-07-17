@@ -24,7 +24,7 @@ module.exports.getNames = function () {
 
 module.exports.getNamesInCity = function (city) {
     let q =
-        "SELECT first, last, age, city, url FROM users RIGHT JOIN signatures ON users.id=signatures.user_id LEFT JOIN user_profiles ON users.id = user_profiles.user_id WHERE city = $1";
+        "SELECT first, last, age, city, url FROM users RIGHT JOIN signatures ON users.id=signatures.user_id LEFT JOIN user_profiles ON users.id = user_profiles.user_id WHERE LOWER(city) = LOWER($1)";
     let params = [city];
     return db.query(q, params);
 };
@@ -89,5 +89,12 @@ module.exports.updatePassword = function (userId, hashPw) {
             SET password=$2
             WHERE id=$1`;
     let params = [userId, hashPw];
+    return db.query(q, params);
+};
+
+module.exports.deleteSignature = function (id) {
+    let q = `DELETE FROM signatures
+            WHERE id=$1`;
+    let params = [id];
     return db.query(q, params);
 };

@@ -7,6 +7,9 @@ const db = require("./db.js");
 //const cookieParser = require("cookie-parser");
 const cookieSession = require("cookie-session");
 const bc = require("./bc.js");
+const mw = require("./middleware.js");
+
+module.exports.app = app;
 
 app.use(express.static("public"));
 
@@ -20,14 +23,22 @@ app.use(
     })
 );
 
-app.get("/register", (req, res) => {
+app.use(function redirect(req, res, next) {
+    if (!req.session.userId && req.url != "/login" && req.url != "/register") {
+        res.redirect("/register");
+    } else {
+        next();
+    }
+});
+
+app.get("/register", mw.redirectIfLoggedIn, (req, res) => {
     res.render("register", {
         layout: "main",
         unlogged: true,
     });
 });
 
-app.post("/register", (req, res) => {
+app.post("/register", mw.redirectIfLoggedIn, (req, res) => {
     bc.hash(req.body.password)
         .then((hashedPw) => {
             db.addUser(req.body.first, req.body.last, req.body.eMail, hashedPw)
@@ -54,14 +65,14 @@ app.post("/register", (req, res) => {
         });
 });
 
-app.get("/login", (req, res) => {
+app.get("/login", mw.redirectIfLoggedIn, (req, res) => {
     res.render("login", {
         layout: "main",
         unlogged: true,
     });
 });
 
-app.post("/login", (req, res) => {
+app.post("/login", mw.redirectIfLoggedIn, (req, res) => {
     // console.log(req.body);
     db.getPwIdSigId(req.body.eMail)
         .then((result) => {
@@ -94,26 +105,18 @@ app.post("/login", (req, res) => {
         .catch((err) => console.log("error in getPw: ", err));
 });
 
-app.use(function redirect(req, res, next) {
-    if (!req.session.userId) {
-        res.redirect("/register");
-    } else {
-        next();
-    }
-});
-
-app.get("/petition", (req, res) => {
+app.get("/petition", mw.redirectIfSigned, (req, res) => {
     // console.log(req.session);
-    if (req.session.signed || req.session.signatureId) {
-        res.redirect("/petition/signers");
-    } else {
-        res.render("home", {
-            layout: "main",
-        });
-    }
+    // if (req.session.signatureId) {
+    //     res.redirect("/petition/signers");
+    // } else {
+    res.render("home", {
+        layout: "main",
+    });
+    // }
 });
 
-app.post("/petition", (req, res) => {
+app.post("/petition", mw.redirectIfSigned, (req, res) => {
     // console.log(req.body);
     let userId = req.session.userId;
     db.addSignature(req.body.signature, userId)
@@ -121,7 +124,6 @@ app.post("/petition", (req, res) => {
             // console.log("id: ", id.rows[0].id);
             console.log("new sign added");
             //res.cookie("signed", true);
-            req.session.signed = true;
             req.session.signatureId = id.rows[0].id;
             res.redirect("/petition/signed");
         })
@@ -155,6 +157,15 @@ app.get("/petition/signed", (req, res) => {
         .catch((err) => {
             console.log("error in getSigners: ", err);
         });
+});
+
+app.post("/petition/signed", (req, res) => {
+    db.deleteSignature(req.session.signatureId)
+        .then(() => {
+            req.session.signatureId = "";
+            res.redirect("/petition");
+        })
+        .catch((err) => console.log("error in deleteSignature: ", err));
 });
 
 app.get("/petition/signers", (req, res) => {
@@ -236,7 +247,7 @@ app.get("/edit-profile", (req, res) => {
     db.getProfile(req.session.userId)
         .then((results) => {
             let profile = results.rows[0];
-            console.log("profile: ", profile);
+            // console.log("profile: ", profile);
             res.render("editProfile", {
                 layout: "main",
                 profile,
@@ -279,6 +290,13 @@ app.post("/edit-profile", (req, res) => {
         });
 });
 
-app.listen(process.env.PORT || 8080, () => {
-    console.log("express listening");
+app.get("/logout", (req, res) => {
+    req.session = null;
+    res.redirect("/login");
 });
+
+if (require.main === module) {
+    app.listen(process.env.PORT || 8080, () => {
+        console.log("express listening");
+    });
+}
