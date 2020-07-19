@@ -1,9 +1,9 @@
-
+<div id="text">
 {{#if cityView}}
-<p>These people in {{city}} support our petition!</p>
+<h3>These people in {{city}} support our petition!</h3>
 {{else}}
-<p>Thank you for supporting our cause!</p>
-<p>Look how many people already signed our petition:</p>
+<h3>Thank you for supporting our cause!</h3>
+<p id="look">Look how many people already signed our petition:</p>
 {{/if}}
 <ul>
     {{#results}}
@@ -22,3 +22,8 @@
     </li>
     {{/results}}
 </ul>
+{{#if notSigned}}
+<a href="/petition"><p>I want to sign too!!</p></a>
+{{/if}}
+</div>
+<div id="picture"></div>

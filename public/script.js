@@ -8,7 +8,7 @@
     canvas.on("mousedown", function (event) {
         var startLeft = event.clientX - canvas.offset().left;
         var startTop = event.clientY - canvas.offset().top;
-        ctx.strokeStyle = "red";
+        ctx.strokeStyle = "#c44536";
         ctx.lineWidth = 3;
         ctx.beginPath();
         ctx.moveTo(startLeft, startTop);

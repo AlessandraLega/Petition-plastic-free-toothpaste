@@ -1,6 +1,58 @@
 body {
-    background-color: aquamarine;
     margin: 0;
+    font-family: Montserrat, Helvetica, sans-serif;
+    background-color: #900c3f;
+    height: 100vh;
+}
+
+header {
+    background-color: #bad4d6;
+    margin: 0;
+    height: 180px;
+}
+
+h1 {
+    font-size: 60px;
+    color: #900c3f;
+    /*     color: #c44536; */
+    /* color: #4a7c59; */
+    /* color: #772e25; */
+    padding: 5px;
+    margin: 0;
+    /* text-transform: uppercase; */
+    text-align: center;
+    font-family: "Dancing Script", cursive;
+}
+
+h2 {
+    font-size: 20px;
+    /* color: #c44536; */
+    color: #197278;
+    padding: 5px;
+    margin: 0;
+    text-align: center;
+}
+
+h3 {
+    color: #900c3f;
+    font-size: 25px;
+}
+
+p {
+    color: #197278;
+    font-size: 20px;
+}
+
+navbar p {
+    color: #197278;
+    margin: 0;
+    text-align: right;
+    padding-right: 5%;
+    padding-top: 10px;
+    padding-bottom: 20px;
+    font-size: 15px;
+
+    /* color: #283d3b; */
 }
 
 form {
@@ -8,10 +60,61 @@ form {
 }
 
 canvas {
-    background-color: white;
-    border: 2px black solid;
+    background-color: #bad4d6;
+    border: 2px #197278 solid;
 }
 
 .error {
-    color: red;
+    color: #c44536;
+}
+
+main {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    margin: 0;
+    padding-top: 50px;
+
+    /* 
+    background-size: 100vw;
+    height: 100vh;
+     */
+}
+
+#text {
+    text-align: center;
+    margin: 0 0 50px 50px;
+    background-color: #edddd4;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+#picture {
+    height: 100vh;
+    border: 2px #900c3f solid;
+    background-size: contain;
+    background-repeat: no-repeat;
+    padding-left: 5%;
+    margin-right: 50px;
+    margin-left: 50px;
+    background-image: url("./assets/n.jpg");
+}
+
+button {
+    margin-top: 20px;
+    background-color: #bad4d6;
+    color: #c44536;
+    padding: 10px;
+    border: 2px #197278 solid;
+    border-radius: 5px;
+}
+
+ul {
+    text-align: left;
+    list-style-type: none;
+    color: #197278;
+    padding-inline-start: 0;
+}
+
+#look {
+    text-align: left;
 }

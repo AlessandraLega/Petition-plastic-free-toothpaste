@@ -72,7 +72,7 @@ module.exports.upsertProfile = function (userId, newAge, newCity, newUrl) {
                 VALUES ($1, $2, $3, $4)
                 ON CONFLICT (user_id)
                 DO UPDATE SET age=$2, city=$3, url=$4`;
-    let params = [userId, newAge, newCity, newUrl];
+    let params = [userId, +newAge || null, newCity, newUrl];
     return db.query(q, params);
 };
 

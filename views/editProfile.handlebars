@@ -1,4 +1,5 @@
-<p>Edit your profile</p>
+<div id="text">
+<h3>Edit your profile</h3>
 <form method="POST">
     <label for="first"><p>First Name</p></label>
     <input type="text" name="first" id="first" autocomplete="off" value={{profile.first}}>
@@ -14,5 +15,9 @@
     <input type="text" name="city" id="city" autocomplete="off" value="{{profile.city}}">
         <label for="url"><p>Url</p></label>
     <input type="text" name="url" id="url" autocomplete="off" value="{{profile.url}}">
+    <input type="hidden" name="_csrf" value="{{csrfToken}}">
+    </br>
     <button id="submit">Update!</button>
 </form>
+</div>
+<div id="picture"></div>

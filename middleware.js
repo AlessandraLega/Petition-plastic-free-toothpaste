@@ -23,3 +23,11 @@ module.exports.redirectIfSigned = function (req, res, next) {
         next();
     }
 };
+
+module.exports.redirectIfNotSigned = function (req, res, next) {
+    if (req.session.userId && !req.session.signatureId) {
+        res.redirect("/petition");
+    } else {
+        next();
+    }
+};

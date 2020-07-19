@@ -8,6 +8,7 @@ const db = require("./db.js");
 const cookieSession = require("cookie-session");
 const bc = require("./bc.js");
 const mw = require("./middleware.js");
+const csurf = require("csurf");
 
 module.exports.app = app;
 
@@ -22,6 +23,13 @@ app.use(
         maxAge: 1000 * 60 * 60 * 24 * 14,
     })
 );
+
+app.use(csurf());
+
+app.use(function (req, res, next) {
+    res.locals.csrfToken = req.csrfToken();
+    next();
+});
 
 app.use(function redirect(req, res, next) {
     if (!req.session.userId && req.url != "/login" && req.url != "/register") {
@@ -43,9 +51,9 @@ app.post("/register", mw.redirectIfLoggedIn, (req, res) => {
         .then((hashedPw) => {
             db.addUser(req.body.first, req.body.last, req.body.eMail, hashedPw)
                 .then((id) => {
-                    console.log("id added: ", id.rows[0].id);
+                    // console.log("id added: ", id.rows[0].id);
                     req.session.userId = id.rows[0].id;
-                    console.log(req.session);
+                    // console.log(req.session);
                     res.redirect("/profile");
                 })
                 .catch((err) => {
@@ -121,7 +129,7 @@ app.post("/petition", mw.redirectIfSigned, (req, res) => {
     let userId = req.session.userId;
     db.addSignature(req.body.signature, userId)
         .then((id) => {
-            // console.log("id: ", id.rows[0].id);
+            console.log("id: ", id);
             console.log("new sign added");
             //res.cookie("signed", true);
             req.session.signatureId = id.rows[0].id;
@@ -136,7 +144,7 @@ app.post("/petition", mw.redirectIfSigned, (req, res) => {
         });
 });
 
-app.get("/petition/signed", (req, res) => {
+app.get("/petition/signed", mw.redirectIfNotSigned, (req, res) => {
     let numSigners;
     db.getSigners()
         .then((result) => {
@@ -177,9 +185,16 @@ app.get("/petition/signers", (req, res) => {
             /*             for (let i = 0; i < results.length; i++) {
                 names.push(`${results[i].first} ${results[i].last}`);
             } */
+            let notSigned;
+            if (req.session.signatureId) {
+                notSigned = false;
+            } else {
+                notSigned = true;
+            }
             res.render("signers", {
                 layout: "main",
                 results,
+                notSigned,
             });
         })
         .catch((err) => {
@@ -257,6 +272,14 @@ app.get("/edit-profile", (req, res) => {
 });
 
 app.post("/edit-profile", (req, res) => {
+    if (req.body.url) {
+        if (
+            req.body.url.indexOf("http") !== 0 ||
+            req.body.url.indexOf("//") !== 0
+        ) {
+            req.body.url = "http://" + req.body.url;
+        }
+    }
     if (req.body.password) {
         bc.hash(req.body.password)
             .then((hashPw) => {

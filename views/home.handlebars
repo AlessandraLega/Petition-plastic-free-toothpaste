@@ -1,21 +1,25 @@
-<h1 id="title">Petition</h1>
-        <p>Hey {{name}} sign the petition</p>
-        {{#if error}}
-        <p class="error">something went wrong! Please sign in the white space!</p>
-        {{/if}}
-        <form method="POST">
-            {{!-- <label for="first"><p>First name:</p></label>
-            <input
-                type="text"
-                name="first"
-                id="first"
-                placeholder="first name" autocomplete="off"
-            />
-            <label for="last"><p>Last name:</p></label>
-            <input type="text" name="last" id="last" placeholder="last name" autocomplete="off" /> --}}
+<div id="text">
+    <h3>Sign our petition to reduce plastic consume!</h3>
+    {{#if error}}
+    <p class="error">something went wrong! Please sign in the white space!</p>
+    {{/if}}
+    <form method="POST">
+        {{!-- <label for="first"><p>First name:</p></label>
+        <input
+            type="text"
+            name="first"
+            id="first"
+            placeholder="first name" autocomplete="off"
+        />
+        <label for="last"><p>Last name:</p></label>
+        <input type="text" name="last" id="last" placeholder="last name" autocomplete="off" /> --}}
 
-            <label for="signature"><p>Your signature:</p></label>
-            <input type="hidden" id="signature" name="signature" value="" />
-            <canvas id="canvas" width="600" height="100"></canvas>
-            <button id="submit">Sign!</button>
-        </form>
+        <label for="signature"><p>Your signature:</p></label>
+        <input type="hidden" id="signature" name="signature" value="" />
+        <canvas id="canvas" width="400" height="200"></canvas>
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+        </br>
+        <button id="submit">Sign!</button>
+    </form>
+</div>
+<div id="picture"></div>

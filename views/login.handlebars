@@ -1,4 +1,5 @@
-<h1>Please log in</h1>
+<div id="text">
+<h3>Please log in</h3>
 {{#if error}}
     <p class="error">Something went wrong, please try again!</p>
 {{/if}}
@@ -7,5 +8,9 @@
 <input type="text" name="eMail" id="eMail" placeholder="e-mail" autocomplete="off" />
 <label for="password"><p>password:</p></label>
 <input type="password" name="password" id="password" placeholder="password" autocomplete="off" />
+<input type="hidden" name="_csrf" value="{{csrfToken}}">
+</br>
 <button id="submit">Log in!</button>
 </form>
+</div>
+<div id="picture"></div>

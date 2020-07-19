@@ -1,10 +1,10 @@
-
+<div id="text">
 {{#if duplicate}}
 <p class="error">You already gave us your infos, thank you!
 </p>
 <p>Now visit our <a href="/petition">petition</a> page!</p>
 {{else}}
-<p>If you want, tell us something about yourself!</p>
+<h3>If you want, tell us something about yourself!</h3>
 {{#if notANum}}
 <p class="error">Your age should be a number!
 </p>
@@ -19,6 +19,10 @@
     <input type="text" name="city" id="city" autocomplete="off">
     <label for="url"><p>Url</p></label>
     <input type="text" name="url" id="url" autocomplete="off">
+    <input type="hidden" name="_csrf" value="{{csrfToken}}">
+    </br>
     <button value="submit">Continue</button>
 </form>
 {{/if}}
+</div>
+<div class="picture height"></div>
