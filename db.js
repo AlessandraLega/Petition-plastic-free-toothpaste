@@ -52,7 +52,7 @@ module.exports.getPwIdSigId = function (eMail) {
 module.exports.addProfile = function (newAge, newCity, newUrl, userId) {
     let q =
         "INSERT INTO user_profiles (age, city, url, user_id) VALUES ($1, $2, $3, $4)";
-    let params = [newAge, newCity, newUrl, userId];
+    let params = [+newAge || null, newCity, newUrl, userId];
     return db.query(q, params);
 };
 
