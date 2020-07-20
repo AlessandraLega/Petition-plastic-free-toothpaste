@@ -1,5 +1,8 @@
 <div id="text">
 <h3>Edit your profile</h3>
+{{#if error}}
+    <p class="error">Something went wrong, please try again!</p>
+{{/if}}
 <form method="POST">
     <label for="first"><p>First Name</p></label>
     <input type="text" name="first" id="first" autocomplete="off" value={{profile.first}}>

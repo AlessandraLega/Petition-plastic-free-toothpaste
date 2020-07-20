@@ -107,10 +107,22 @@ app.post("/login", mw.redirectIfLoggedIn, (req, res) => {
                             });
                         }
                     })
-                    .catch((err) => console.log("error in compare: ", err));
+                    .catch((err) => {
+                        console.log("error in compare: ", err);
+                        res.render("login", {
+                            layout: "main",
+                            error: true,
+                        });
+                    });
             }
         })
-        .catch((err) => console.log("error in getPw: ", err));
+        .catch((err) => {
+            console.log("error in getPw: ", err);
+            res.render("login", {
+                layout: "main",
+                error: true,
+            });
+        });
 });
 
 app.get("/petition", mw.redirectIfSigned, (req, res) => {
@@ -173,7 +185,13 @@ app.post("/petition/signed", (req, res) => {
             req.session.signatureId = "";
             res.redirect("/petition");
         })
-        .catch((err) => console.log("error in deleteSignature: ", err));
+        .catch((err) => {
+            console.log("error in deleteSignature: ", err);
+            res.render("thanks", {
+                layout: "main",
+                error: true,
+            });
+        });
 });
 
 app.get("/petition/signers", (req, res) => {
@@ -289,6 +307,10 @@ app.post("/edit-profile", (req, res) => {
             })
             .catch((err) => {
                 console.log("error in update password: ", err);
+                res.render("editProfile", {
+                    layout: "main",
+                    error: true,
+                });
             });
     }
     Promise.all([
@@ -310,6 +332,10 @@ app.post("/edit-profile", (req, res) => {
         })
         .catch((err) => {
             console.log("error in upsert: ", err);
+            res.render("editProfile", {
+                layout: "main",
+                error: true,
+            });
         });
 });
 

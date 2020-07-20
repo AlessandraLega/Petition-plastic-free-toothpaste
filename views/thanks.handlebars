@@ -1,5 +1,9 @@
 <div id="text">
+    {{#if error}}
+    <p class="error">Something went wrong, please try again!</p>
+    {{else}}
 <h3>Thank you for supporting our petition!</h3>
+{{/if}}
 <img src={{signature}} alt="your signature">
 <form method="POST">
     <input type="hidden" name="_csrf" value="{{csrfToken}}">
