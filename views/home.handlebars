@@ -16,7 +16,9 @@
 
         <label for="signature"><p>Your signature:</p></label>
         <input type="hidden" id="signature" name="signature" value="" />
-        <canvas id="canvas" width="400" height="200"></canvas>
+        <div id="canvasContainer">
+        <canvas id="canvas" height="200" width="280"></canvas>
+        </div>
         <input type="hidden" name="_csrf" value="{{csrfToken}}">
         </br>
         <button id="submit">Sign!</button>

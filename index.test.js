@@ -108,7 +108,7 @@ test("POST /petition contains error message if input is bad", () => {
     return supertest(app)
         .post("/petition")
         .then((response) => {
-            expect(response.res.incomingMessage.path).toBe("/petition");
+            expect(response.res.socket._httpMessage.path).toBe("/petition");
             expect(response.text).toContain(
                 '<p class="error">something went wrong! Please sign in the white space!</p>'
             );

@@ -1,0 +1,24 @@
+document.getElementById('current-week') && setTimeout(
+    () => location.hash = location.hash || '#current-week',
+    1
+);
+
+const selects = document.querySelectorAll('select[name="faculty"], select[name="relief"]');
+if (selects.length) {
+    const token = document.querySelector('input[name="_csrf"]').value;
+    const url = document.querySelector('input[name="url"]').value;
+    for (const select of selects) {
+        select.onchange = async ({target}) => {
+            const {value: id} = target.form.id;
+            const {name} = target;
+            select.disabled = true;
+            await fetch(`${url}/${id}/${name}/${target.value}`, {
+                method: 'post',
+                headers: {
+                    'xsrf-token': token
+                }
+            });
+            select.disabled = false;
+        }
+    }
+}

@@ -2,7 +2,7 @@ Response {
     _events: [Object: null prototype] {},
     _eventsCount: 0,
     _maxListeners: undefined,
-    res:
+    res: 
     IncomingMessage {
         _readableState:
         ReadableState {
