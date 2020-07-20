@@ -39,6 +39,10 @@ app.use(function redirect(req, res, next) {
     }
 });
 
+app.get("/", (req, res) => {
+    res.redirect("/register");
+});
+
 app.get("/register", mw.redirectIfLoggedIn, (req, res) => {
     res.render("register", {
         layout: "main",
