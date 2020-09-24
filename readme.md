@@ -24,7 +24,7 @@ Online zero-waste petition to forbid the use of plastic tubes for toothpaste and
 
 Welcome page for registration or login, the users can switch from registration to login with a link or using the navigation bar. An error message appears if the data is invalid or the password for login is wrong
 
-<img src='./public/readme/registration.PNG' width="48%"/> <img src='./public/readme/registration.PNG' width="48%" />
+<img src='./public/readme/registration.PNG' width="48%"/> <img src='./public/readme/login.PNG' width="48%" />
 
 <br>
 
