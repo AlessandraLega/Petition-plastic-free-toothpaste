@@ -55,9 +55,7 @@ app.post("/register", mw.redirectIfLoggedIn, (req, res) => {
         .then((hashedPw) => {
             db.addUser(req.body.first, req.body.last, req.body.eMail, hashedPw)
                 .then((id) => {
-                    // console.log("id added: ", id.rows[0].id);
                     req.session.userId = id.rows[0].id;
-                    // console.log(req.session);
                     res.redirect("/profile");
                 })
                 .catch((err) => {
@@ -65,6 +63,7 @@ app.post("/register", mw.redirectIfLoggedIn, (req, res) => {
                     res.render("register", {
                         layout: "main",
                         error: true,
+                        unlogged: true,
                     });
                 });
         })
@@ -73,6 +72,7 @@ app.post("/register", mw.redirectIfLoggedIn, (req, res) => {
             res.render("/register", {
                 layout: "main",
                 error: true,
+                unlogged: true,
             });
         });
 });
@@ -85,29 +85,29 @@ app.get("/login", mw.redirectIfLoggedIn, (req, res) => {
 });
 
 app.post("/login", mw.redirectIfLoggedIn, (req, res) => {
-    // console.log(req.body);
     db.getPwIdSigId(req.body.eMail)
         .then((result) => {
             let userId = result.rows[0].userid;
             let signatureId = result.rows[0].signatureid;
             let pw = result.rows[0].password;
-            req.session.userId = userId;
-            req.session.signatureId = signatureId;
-            console.log("req.session: ", req.session);
             if (!pw) {
                 res.render("login", {
                     layout: "main",
                     error: true,
+                    unlogged: true,
                 });
             } else {
                 bc.compare(req.body.password, pw)
                     .then((matchingValue) => {
                         if (matchingValue) {
+                            req.session.userId = userId;
+                            req.session.signatureId = signatureId;
                             res.redirect("/petition");
                         } else {
                             res.render("login", {
                                 layout: "main",
                                 error: true,
+                                unlogged: true,
                             });
                         }
                     })
@@ -116,6 +116,7 @@ app.post("/login", mw.redirectIfLoggedIn, (req, res) => {
                         res.render("login", {
                             layout: "main",
                             error: true,
+                            unlogged: true,
                         });
                     });
             }
@@ -125,6 +126,7 @@ app.post("/login", mw.redirectIfLoggedIn, (req, res) => {
             res.render("login", {
                 layout: "main",
                 error: true,
+                unlogged: true,
             });
         });
 });
@@ -141,13 +143,9 @@ app.get("/petition", mw.redirectIfSigned, (req, res) => {
 });
 
 app.post("/petition", mw.redirectIfSigned, (req, res) => {
-    // console.log(req.body);
     let userId = req.session.userId;
     db.addSignature(req.body.signature, userId)
         .then((id) => {
-            console.log("id: ", id);
-            console.log("new sign added");
-            //res.cookie("signed", true);
             req.session.signatureId = id.rows[0].id;
             res.redirect("/petition/signed");
         })
@@ -165,11 +163,7 @@ app.get("/petition/signed", mw.redirectIfNotSigned, (req, res) => {
     db.getSigners()
         .then((result) => {
             numSigners = result.rows[0].count;
-            // console.log(numSigners);
-            // console.log("sign count: ", numSigners);
-            // console.log("req.session.id: ", req.session.id);
             db.getSignature(req.session.signatureId).then((signature) => {
-                // console.log("signature: ", signature);
                 signature = signature.rows[0].signature;
                 res.render("thanks", {
                     layout: "main",
@@ -199,14 +193,9 @@ app.post("/petition/signed", (req, res) => {
 });
 
 app.get("/petition/signers", (req, res) => {
-    // let names = [];
     db.getNames()
         .then((results) => {
             results = results.rows;
-            // console.log(results);
-            /*             for (let i = 0; i < results.length; i++) {
-                names.push(`${results[i].first} ${results[i].last}`);
-            } */
             let notSigned;
             if (req.session.signatureId) {
                 notSigned = false;
@@ -253,15 +242,16 @@ app.post("/profile", (req, res) => {
     }
     if (req.body.url) {
         if (
-            req.body.url.indexOf("http") !== 0 ||
-            req.body.url.indexOf("//") !== 0
+            req.body.url.indexOf("http") == 0 ||
+            req.body.url.indexOf("//") == 0
         ) {
+            console.log("ok");
+        } else {
             req.body.url = "http://" + req.body.url;
         }
     }
     db.addProfile(req.body.age, req.body.city, req.body.url, req.session.userId)
         .then(() => {
-            console.log("profile added");
             res.redirect("/petition");
         })
         .catch((err) => {
@@ -284,7 +274,6 @@ app.get("/edit-profile", (req, res) => {
     db.getProfile(req.session.userId)
         .then((results) => {
             let profile = results.rows[0];
-            // console.log("profile: ", profile);
             res.render("editProfile", {
                 layout: "main",
                 profile,
@@ -296,9 +285,11 @@ app.get("/edit-profile", (req, res) => {
 app.post("/edit-profile", (req, res) => {
     if (req.body.url) {
         if (
-            req.body.url.indexOf("http") !== 0 ||
-            req.body.url.indexOf("//") !== 0
+            req.body.url.indexOf("http") == 0 ||
+            req.body.url.indexOf("//") == 0
         ) {
+            console.log("ok");
+        } else {
             req.body.url = "http://" + req.body.url;
         }
     }
