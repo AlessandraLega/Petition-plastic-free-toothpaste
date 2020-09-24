@@ -24,15 +24,13 @@ Online zero-waste petition to forbid the use of plastic tubes for toothpaste and
 
 Welcome page for registration or login, the users can switch from registration to login with a link or using the navigation bar. An error message appears if the data is invalid or the password for login is wrong
 
-<img src='./public/readme/registration.PNG' width="48%"/>
-
-<img src='./public/readme/registration.PNG' width="48%" />
+<img src='./public/readme/registration.PNG' width="48%"/> <img src='./public/readme/registration.PNG' width="48%" />
 
 <br>
 
 After registering the users can also provide additional (optional) information about themselves or skip directly to the signing page. If the age is not a number, a customized error will appear. Users can always change their profile information as well as the password by visiting the "my profile" page.
 
-<img src='./public/readme/profile.PNG' width="48%" /><img src='./public/readme/edit-profile.PNG' width="48%" />
+<img src='./public/readme/profile.PNG' width="48%" /> <img src='./public/readme/edit-profile.PNG' width="48%" />
 
 <br>
 
